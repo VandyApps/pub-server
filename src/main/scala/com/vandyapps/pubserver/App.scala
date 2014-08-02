@@ -61,19 +61,21 @@ object App extends FinatraServer {
         |    { "path" : "/order", "method" : "GET", 
         |        "input" : ["count", "apikey"],
         |        "description" : "",
-        |        "output" : "PubReport"}
+        |        "output" : "PubReport" },
         |    { "path" : "/order", "method" : "POST", 
         |        "input" : ["orderNumber", "apikey"],
         |        "description" : "",
         |        "output" : "String" }
         |  ],
         |  "structs" : [
-        |    "PubOrder" : {
-        |      "orderNumber" : "Number",
-        |      "timeCreated" : "Number" },
-        |    "PubReport" : {
-        |      "orders" : "[PubOrder]",
-        |      "status" : "String" }
+        |    { "type" : "PubOrder",
+        |      "struct" : {
+        |        "orderNumber" : "Number",
+        |        "timeCreated" : "Number" }},
+        |    { "type" : "PubReport",
+        |      "struct" : {
+        |        "orders" : "[PubOrder]",
+        |        "status" : "String" }}
         |  ]
         |}
       """.stripMargin
