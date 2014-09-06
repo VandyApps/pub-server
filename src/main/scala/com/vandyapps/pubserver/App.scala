@@ -39,7 +39,7 @@ object App extends FinatraServer {
           .>>>(render.json(_).toFuture)
     }
     
-    get("/console") {
+    get("/console") { request =>
       render.html("main.html").toFuture
     }
     
