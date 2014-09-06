@@ -38,7 +38,11 @@ object App extends FinatraServer {
           .getOrElse(PubReport(status = "Malformed request"))
           .>>>(render.json(_).toFuture)
     }
-  
+    
+    get("/console") {
+      render.html("main.html").toFuture
+    }
+    
     notFound { request =>
       render.json(PubReport(status = "Wrong API call")).toFuture
     }
@@ -83,6 +87,7 @@ object App extends FinatraServer {
   implicit class Piped[T](pipee: T) {
     def >>>[U](receiver: T=>U): U = receiver(pipee)
   }
+  
 }
 
 case class PubOrder(
