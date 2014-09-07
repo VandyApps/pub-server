@@ -1,0 +1,28 @@
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  background: radial-gradient(#00e324, #003005);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.spacer {
+  height: 20px;
+}
+
+.main-pane {
+  background-color: #eeeeee;
+  padding: 10px;
+  margin: 10px;
+  opacity: 0.9;
+  text-align: center;
+}
+
+input {
+  text-align: center;
+}
