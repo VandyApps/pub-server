@@ -40,7 +40,7 @@ object App extends FinatraServer {
     }
     
     get("/console") { request =>
-      render.static("main.html").toFuture
+      render.static("/main.html").toFuture
     }
     
     notFound { request =>
