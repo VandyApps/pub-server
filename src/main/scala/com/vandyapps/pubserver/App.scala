@@ -48,7 +48,7 @@ object App extends FinatraServer {
     }
 
     error { request =>
-      render.json(PubReport(status = "Something's wrong")).toFuture
+      render.json(PubReport(status = s"Something's wrong: ${request.error}")).toFuture
     }
 
   }
