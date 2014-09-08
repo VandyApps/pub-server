@@ -15,6 +15,7 @@ Compile the program into an executable JAR in `target/`
     $ sbt compile assembly
     
 Execute the server program as a background process. The JVM is capped to use only 256MB of memory so the host is not 
-swamped.
+swamped. The `env` option makes sure that the static file server could find the resource files. Passing an empty string
+to the `adminPort` turns off the feature.
 
-    $ java -Xms256m -Xmx256m -jar target/pub-server.jar &
+    $ java -Xms256m -Xmx256m -Dcom.twitter.finatra.config.env=production -Dcom.twitter.finatra.config.adminPort='' -jar target/pub-server.jar &
