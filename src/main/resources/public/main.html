@@ -27,17 +27,18 @@
   <div class="container">
     <div class="spacer"></div>
     <div class="main-pane">
-      Order Completed:
+      Order Up
+      <br>
       <input ng-model="orderNumber" ng-keypress="($event.which === 13)?submitOrder():0">
       <br>
       {{timeString(currentTime)}}
     </div>
     <div class="row main-pane">
       <div class="col-xs-6">
-        <p ng-repeat="num in orders">{{num}}</p>
+        <p ng-repeat="num in orders track by $index">{{num}}</p>
       </div>
       <div class="col-xs-6">
-        <p ng-repeat="time in times">{{timeString(time)}}</p>
+        <p ng-repeat="time in times track by $index">{{timeString(time)}}</p>
       </div>
     </div>
     <div class="spacer"></div>
