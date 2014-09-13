@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang=en ng-app="ConsoleApp">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="description" content="">
+  <meta name="author" content="Athran Abdul Rahman, first of his name">
+  
+  <title>Pub Order Console</title>
+  
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet"
+          href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    
+  <!-- Custom styles for this template -->
+  <link href="css/styles.css" rel="stylesheet">
+    
+  <!-- Loading AngularJS and D3JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+
+  <!-- Loading the application code -->
+  <script src="js/app.js"></script>
+    
+</head>
+<body ng-controller="ConsoleCtrl">
+  <div class="container">
+    <div class="spacer"></div>
+    <div class="main-pane">
+      Order Up
+      <br>
+      <input ng-model="orderNumber" ng-keypress="($event.which === 13)?submitOrder():0">
+      <br>
+      {{timeString(currentTime)}}
+    </div>
+    <div class="row main-pane">
+      <div class="col-xs-6">
+        <p ng-repeat="num in orders track by $index">{{num}}</p>
+      </div>
+      <div class="col-xs-6">
+        <p ng-repeat="time in times track by $index">{{timeString(time)}}</p>
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+  
+<!-- Bootstrap core JavaScript -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  
+</body>
+</html>
