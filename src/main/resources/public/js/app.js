@@ -7,8 +7,7 @@ consoleApp.controller('ConsoleCtrl', function($scope, $http, $interval) {
   $scope.orderNumber = 1000;
   
   $scope.submitOrder = function() {
-    $scope.orders.push($scope.orderNumber);
-    $scope.times.push(Date.now());
+    $http.post("order?orderNumber=" + $scope.orderNumber + "&apikey=bogus");
   };
   
   $scope.orders = [];
@@ -24,12 +23,15 @@ consoleApp.controller('ConsoleCtrl', function($scope, $http, $interval) {
   var update = function() {
     $scope.currentTime = Date.now();
     
-    for (var t in $scope.times) {
-      if (($scope.times[t] + (5 * 60 * 1000)) < $scope.currentTime) {
-        $scope.times = $scope.times.slice(1);
-        $scope.orders = $scope.orders.slice(1);
-      }
-    }
+    $http.get("order?count=100&apikey=bogus")
+        .success(function(data) {
+            $scope.orders = [];
+            $scope.times = [];
+            for (var i in data.orders) {
+                $scope.orders.push(data.orders[i].orderNumber);
+                $scope.times.push(data.orders[i].timeCreated)
+            }});
+    
   }
   
   $interval(update, 1000);
