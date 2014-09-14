@@ -12,7 +12,7 @@ object App extends FinatraServer {
   class MainController extends Controller with OrderRegister {
   
     get("/") { request =>
-      render.plain(API_DOC).toFuture
+      render.static("index.txt").toFuture
     }
     
     get("/order") { request =>
@@ -54,39 +54,6 @@ object App extends FinatraServer {
   }
   
   register(new MainController)
-  
-  val API_DOC =
-      """{
-        |  "paths" : [
-        |    { "path" : "/", "method" : "GET",
-        |        "input" : [],
-        |        "description" : "Return server API",
-        |        "output" : "Object" },
-        |    { "path" : "/order", "method" : "GET", 
-        |        "input" : ["count", "apikey"],
-        |        "description" : "return current orders",
-        |        "output" : "PubReport" },
-        |    { "path" : "/order", "method" : "POST", 
-        |        "input" : ["orderNumber", "apikey"],
-        |        "description" : "add order",
-        |        "output" : "String" },
-        |    { "path" : "/console", "method" : "GET", 
-        |        "input" : [],
-        |        "description" : "console interface to add orders",
-        |        "output" : "HTML" },
-        |  ],
-        |  "structs" : [
-        |    { "type" : "PubOrder",
-        |      "struct" : {
-        |        "orderNumber" : "Number",
-        |        "timeCreated" : "Number" }},
-        |    { "type" : "PubReport",
-        |      "struct" : {
-        |        "orders" : "[PubOrder]",
-        |        "status" : "String" }}
-        |  ]
-        |}
-      """.stripMargin
       
   implicit class Piped[T](pipee: T) {
     def >>>[U](receiver: T=>U): U = receiver(pipee)
