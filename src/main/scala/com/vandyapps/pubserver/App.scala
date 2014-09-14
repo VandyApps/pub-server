@@ -110,12 +110,26 @@ trait OrderRegister {
           orderNumber = num, 
           timeCreated = System.currentTimeMillis)
   
-  def getAllOrders: Seq[PubOrder] = orders
+  def getAllOrders: Seq[PubOrder] = {
+    removeStaleOrder()
+    orders
+  }
   
-  def getOrders(count: Int): Seq[PubOrder] = orders.take(count)
+  def getOrders(count: Int): Seq[PubOrder] = {
+    removeStaleOrder()
+    orders.take(count)
+  }
   
   def orderCount = orders.length
   
   def isValid(key: String) = true
+  
+  def removeStaleOrder() {
+    orders = orders.filter { o =>
+      (System.currentTimeMillis - o.timeCreated) < FIVE_MINUTES
+    }
+  }
+  
+  private val FIVE_MINUTES = 5 * 60 * 1000
   
 }
