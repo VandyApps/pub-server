@@ -9,7 +9,9 @@ object App extends FinatraServer {
   println("=          PUB SERVER          =")
   println("================================")
 
-  class MainController extends Controller with OrderRegister {
+  class MainController extends Controller 
+      with OrderRegister 
+      with RequestValidation {
   
     get("/") { request =>
       render.static("index.txt").toFuture
@@ -17,9 +19,7 @@ object App extends FinatraServer {
     
     get("/order") { request =>
       (for (_count <- request.params.get("count");
-            apikey <- request.params.get("apikey");
-            count  <- Try(_count.toInt).toOption;
-            if isValid(apikey))
+            count  <- Try(_count.toInt).toOption)
       yield PubReport(status = "Okay", 
                       orders = getOrders(count)))
           .getOrElse(PubReport(status = "Malformed request"))
@@ -30,7 +30,7 @@ object App extends FinatraServer {
       (for (_order <- request.params.get("orderNumber");
             apikey <- request.params.get("apikey");
             orderNum <- Try(_order.toInt).toOption;
-            if isValid(apikey))
+            if isValid(apikey, orderNum))
       yield orderNum)
           .map { num =>
               addOrder(num)
@@ -50,6 +50,11 @@ object App extends FinatraServer {
     error { request =>
       render.json(PubReport(status = s"Something's wrong: ${request.error}")).toFuture
     }
+    
+    val apiKey = 
+      io.Source
+        .fromInputStream(getClass.getResourceAsStream("/apiKey.txt"))(io.Codec("UTF-8"))
+        .mkString
 
   }
   
@@ -89,8 +94,6 @@ trait OrderRegister {
   
   def orderCount = orders.length
   
-  def isValid(key: String) = true
-  
   def removeStaleOrder() {
     orders = orders.filter { o =>
       (System.currentTimeMillis - o.timeCreated) < FIVE_MINUTES
@@ -98,5 +101,23 @@ trait OrderRegister {
   }
   
   private val FIVE_MINUTES = 5 * 60 * 1000
+  
+}
+
+trait RequestValidation {
+  private val hasher = 
+    java.security.MessageDigest.getInstance("SHA-1")
+  
+  def apiKey: String
+  
+  def isValid(key: String, data: Int) = {
+    val inputString: String = apiKey + data
+    hasher.update(inputString.getBytes)
+    val hash = hasher.digest()
+    key.equalsIgnoreCase(toHex(hash))
+  }
+  
+  private def toHex(bytes: Array[Byte]) = 
+    javax.xml.bind.DatatypeConverter.printHexBinary(bytes)
   
 }
