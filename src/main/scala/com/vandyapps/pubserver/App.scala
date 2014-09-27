@@ -3,15 +3,16 @@ package com.vandyapps.pubserver
 import util.Try
 import com.twitter.finatra._
 
-object App extends FinatraServer {
+object App extends FinatraServer 
+      with RequestValidation {
 
   println("================================")
   println("=          PUB SERVER          =")
   println("================================")
+  println(s"With password: ${apiKey}")
 
   class MainController extends Controller 
-      with OrderRegister 
-      with RequestValidation {
+      with OrderRegister {
   
     get("/") { request =>
       render.static("index.txt").toFuture
@@ -51,11 +52,6 @@ object App extends FinatraServer {
       render.json(PubReport(status = s"Something's wrong: ${request.error}")).toFuture
     }
     
-    val apiKey = 
-      io.Source
-        .fromInputStream(getClass.getResourceAsStream("/apiKey.txt"))(io.Codec("UTF-8"))
-        .mkString
-
   }
   
   register(new MainController)
@@ -64,6 +60,11 @@ object App extends FinatraServer {
     def >>>[U](receiver: T=>U): U = receiver(pipee)
   }
   
+  lazy val apiKey = 
+      io.Source
+        .fromInputStream(getClass.getResourceAsStream("/apiKey.txt"))(io.Codec("UTF-8"))
+        .mkString
+        
 }
 
 case class PubOrder(
