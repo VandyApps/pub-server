@@ -60,10 +60,7 @@ object App extends FinatraServer
     def >>>[U](receiver: T=>U): U = receiver(pipee)
   }
   
-  lazy val apiKey = 
-      io.Source
-        .fromInputStream(getClass.getResourceAsStream("/apiKey.txt"))(io.Codec("UTF-8"))
-        .mkString
+  lazy val apiKey = ""
         
 }
 
@@ -113,7 +110,7 @@ trait RequestValidation {
   
   def isValid(key: String, data: Int) = {
     val inputString: String = apiKey + data
-    hasher.update(inputString.getBytes)
+    hasher.update(inputString.getBytes("UTF-8"))
     val hash = hasher.digest()
     key.equalsIgnoreCase(toHex(hash))
   }
