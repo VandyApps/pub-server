@@ -6,8 +6,15 @@ consoleApp.controller('ConsoleCtrl', function($scope, $http, $interval) {
   
   $scope.orderNumber = 1000;
   
+  $scope.password = "";
+  
   $scope.submitOrder = function() {
-    $http.post("order?orderNumber=" + $scope.orderNumber + "&apikey=bogus");
+    if ($scope.orderNumber !== "") {
+      var apikey = CryptoJS.SHA1($scope.password + $scope.orderNumber);
+      $http.post("order?orderNumber=" + $scope.orderNumber + "&apikey=" + apikey)
+          .success(function(data) { console.log(data) });
+      $scope.orderNumber = "";
+    }
   };
   
   $scope.orders = [];
@@ -23,7 +30,7 @@ consoleApp.controller('ConsoleCtrl', function($scope, $http, $interval) {
   var update = function() {
     $scope.currentTime = Date.now();
     
-    $http.get("order?count=100&apikey=bogus")
+    $http.get("order?count=100")
         .success(function(data) {
             $scope.orders = [];
             $scope.times = [];
