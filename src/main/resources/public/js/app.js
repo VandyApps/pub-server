@@ -10,7 +10,9 @@ consoleApp.controller('ConsoleCtrl', function($scope, $http, $interval) {
   
   $scope.submitOrder = function() {
     if ($scope.orderNumber !== "") {
-      var apikey = CryptoJS.SHA1($scope.password + $scope.orderNumber);
+	  var url = window.location.href;
+	  var apikey = url.substring(url.indexOf("?") + 1);
+      apikey = CryptoJS.SHA1(apikey + $scope.orderNumber);
       $http.post("order?orderNumber=" + $scope.orderNumber + "&apikey=" + apikey)
           .success(function(data) { console.log(data) });
       $scope.orderNumber = "";
