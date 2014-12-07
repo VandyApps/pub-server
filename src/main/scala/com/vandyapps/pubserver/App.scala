@@ -3,12 +3,12 @@ package com.vandyapps.pubserver
 import util.Try
 import com.twitter.finatra._
 
-object App extends FinatraServer with RequestValidation {
+object PubApp extends App with RequestValidation {
 
   println("================================")
   println("=          PUB SERVER          =")
   println("================================")
-  println(s"With password: ${apiKey}")
+  
 
   class MainController extends Controller
       with OrderRegister {
@@ -55,13 +55,34 @@ object App extends FinatraServer with RequestValidation {
 
   }
 
-  register(new MainController)
+  this.args match {
+    case Array("help")    => println(usageGuide)
+    case Array()          => bootServer()
+    case Array(port)      => bootServer(port)
+    case Array(port, env) => bootServer(port, env)
+  }
+
+  def bootServer(port: String = "8080", env: String = "development") {    
+    System.setProperty("com.twitter.finatra.config.env", env)
+    System.setProperty("com.twitter.finatra.config.port", s":$port")
+    System.setProperty("com.twitter.finatra.config.adminPort", "")
+    System.setProperty("com.twitter.finatra.config.appName", "Truss")    
+    
+    println(s"Starting $env server on port $port")
+    println(s"With password: ${apiKey}")
+    
+    val server = new FinatraServer
+    server.register(new MainController)
+    server.start()
+  }
 
   implicit class Piped[T](pipee: T) {
     def >>>[U](receiver: T=>U): U = receiver(pipee)
   }
 
   lazy val apiKey = ""
+  
+  lazy val usageGuide = "Usage"
 
 }
 
