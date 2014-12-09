@@ -1,0 +1,10 @@
+
+Usage:    java -jar pub-server.jar [$PortNumber [$Environment]]
+
+$PortNumber :: Which port the server should listen to. Optional. Default
+               to port 8080. For production, use port 80. Only root user
+               can bind to port 80. Use sudo.
+$Environment :: "development" (default) or 
+                "production" when packaging into JAR
+
+example command:   sudo java -jar pub-serve.jar 8080 production
