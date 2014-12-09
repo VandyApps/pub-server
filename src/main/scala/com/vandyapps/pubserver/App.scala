@@ -82,7 +82,8 @@ object PubApp extends App with RequestValidation {
 
   lazy val apiKey = ""
   
-  lazy val usageGuide = "Usage"
+  lazy val usageGuide =
+    io.Source.fromInputStream(getClass.getResourceAsStream("usage.txt")).mkString
 
 }
 
