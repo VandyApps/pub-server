@@ -23,12 +23,12 @@ trait OrderRegister {
 
   def orderCount = orders.get.length
 
-  def removeStaleOrder() {
-    orders.update ( _.filter { o =>
-      (System.currentTimeMillis - o.timeCreated) < FIVE_MINUTES
-    } )
-  }
-
+  def removeStaleOrder() =
+    orders.update ( _.filter(isFresh) )
+  
+  def isFresh(o: PubOrder) = 
+    (System.currentTimeMillis - o.timeCreated) < FIVE_MINUTES
+  
   private val FIVE_MINUTES = 5 * 60 * 1000
 
 }
