@@ -15,7 +15,10 @@ Compile the program into an executable JAR in `target/`
     $ sbt compile assembly
     
 Execute the server program as a background process. The JVM is capped to use only 256MB of memory so the host is not 
-swamped. The `env` option makes sure that the static file server could find the resource files. Passing an empty string
-to the `adminPort` turns off the feature.
+swamped. The API key `password` is passed as the first option. The key ensures that only authorized personnels can 
+add an order to the queue. The port number is passed as the second option. The `production` option makes sure that 
+the static file server could find the resource files.
 
-    $ java -Xms256m -Xmx256m -Dcom.twitter.finatra.config.env=production -Dcom.twitter.finatra.config.adminPort='' -jar target/pub-server.jar &
+    $ java -Xms256m -Xmx256m -jar target/pub-server.jar password 8090 production &
+
+[Note December 13th, 2014] Changed the command line options to be easier to use
