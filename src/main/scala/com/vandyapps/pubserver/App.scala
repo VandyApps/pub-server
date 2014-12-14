@@ -3,7 +3,7 @@ package com.vandyapps.pubserver
 import util.Try
 import com.twitter.finatra._
 
-object PubApp extends App with RequestValidation {
+object PubApp extends App {
 
   println("================================")
   println("=          PUB SERVER          =")
@@ -11,27 +11,30 @@ object PubApp extends App with RequestValidation {
   println()
 
   this.args match {
-    case Array("help")    => println(usageGuide)
-    case Array()          => bootServer()
-    case Array(port)      => bootServer(port)
-    case Array(port, env) => bootServer(port, env)
+    case Array("help") | Array() => println(usageGuide)
+    case Array(key)              => bootServer(key)
+    case Array(key, port)        => bootServer(key, port)
+    case Array(key, port, env)   => bootServer(key, port, env)
   }
 
-  def bootServer(port: String = "8080", env: String = "development") {    
+  def bootServer(
+      key:  String,
+      port: String = "8080", 
+      env:  String = "development") {    
     System.setProperty("com.twitter.finatra.config.env", env)
     System.setProperty("com.twitter.finatra.config.port", s":$port")
     System.setProperty("com.twitter.finatra.config.adminPort", "")
     System.setProperty("com.twitter.finatra.config.appName", "Truss")    
     
     println(s"Starting $env server on port $port")
-    println(s"With password: ${apiKey}")
+    println(s"With password: $key")
+    
+    val validator = new RequestValidation { def apiKey = key }
     
     val server = new FinatraServer
-    server.register(new MainController(this))
+    server.register(new MainController(validator))
     server.start()
   }
-
-  lazy val apiKey = ""
   
   lazy val usageGuide =
     io.Source.fromInputStream(getClass.getResourceAsStream("usage.txt")).mkString
