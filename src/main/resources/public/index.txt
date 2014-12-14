@@ -10,7 +10,7 @@
     { 
       "path" : "/order", 
       "method" : "GET", 
-      "input" : ["count", "apikey"],
+      "input" : ["count"],
       "description" : "return current orders",
       "output" : "PubReport" 
     },
